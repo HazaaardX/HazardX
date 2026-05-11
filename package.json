@@ -1,0 +1,29 @@
+{
+  "name": "hazardx",
+  "version": "1.0.0",
+  "description": "Industrial environments such as steel plants and min-",
+  "keywords": [
+    "Machine",
+    "Learning",
+    "Industrial",
+    "Safety",
+    "Random",
+    "Forest",
+    "Accident",
+    "Severity",
+    "Prediction",
+    "Risk",
+    "Analysis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "\\"
+  },
+  "license": "MIT",
+  "author": "Shreyas, Parth",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
