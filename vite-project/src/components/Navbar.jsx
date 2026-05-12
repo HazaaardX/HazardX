@@ -17,7 +17,6 @@ export function Navbar() {
             <a href="#home" className="text-gray-700 hover:text-blue-600 transition">Home</a>
             <a href="#features" className="text-gray-700 hover:text-blue-600 transition">Features</a>
             <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition">How It Works</a>
-            <a href="#about" className="text-gray-700 hover:text-blue-600 transition">About</a>
             <a href="#contact" className="text-gray-700 hover:text-blue-600 transition">Contact</a>
           </div>
 
