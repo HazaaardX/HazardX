@@ -1,19 +1,28 @@
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import HowItWorks from './components/HowItWorks';
-import Footer from './components/Footer';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-export default function App() {
+import { HomePage } from './pages/HomePage'
+import { PredictionPage } from './pages/PredictionPage'
+
+function App() {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <HowItWorks />
-      </main>
-      <Footer />
-    </div>
-  );
+    <BrowserRouter>
+
+      <Routes>
+
+        <Route
+          path="/"
+          element={<HomePage />}
+        />
+
+        <Route
+          path="/predict"
+          element={<PredictionPage />}
+        />
+
+      </Routes>
+
+    </BrowserRouter>
+  )
 }
+
+export default App
