@@ -1,46 +1,48 @@
-import { Shield, Menu } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
 
-export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <nav className="bg-white shadow-sm fixed w-full top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center gap-2">
-            <Shield className="w-8 h-8 text-blue-600" />
-            <span className="font-bold text-xl text-gray-900">HazardX</span>
-          </div>
+    <>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <div className="navbar-inner">
+          <a href="#home" className="navbar-logo">
+            <div className="navbar-logo-mark">H</div>
+            <span className="navbar-logo-text">HazardX</span>
+          </a>
 
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#home" className="text-gray-700 hover:text-blue-600 transition">Home</a>
-            <a href="#features" className="text-gray-700 hover:text-blue-600 transition">Features</a>
-            <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition">How It Works</a>
-            <a href="#contact" className="text-gray-700 hover:text-blue-600 transition">Contact</a>
+          <div className="navbar-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#contact">Contact</a>
+            <button className="navbar-cta">Get Started</button>
           </div>
 
           <button
-            className="md:hidden p-2"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="navbar-mobile-toggle"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle navigation"
           >
-            <Menu className="w-6 h-6 text-gray-700" />
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
+      </nav>
 
-        {mobileMenuOpen && (
-          <div className="md:hidden pb-4 pt-2 border-t">
-            <div className="flex flex-col gap-3">
-              <a href="#home" className="text-gray-700 hover:text-blue-600 transition py-2">Home</a>
-              <a href="#features" className="text-gray-700 hover:text-blue-600 transition py-2">Features</a>
-              <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition py-2">How It Works</a>
-              <a href="#about" className="text-gray-700 hover:text-blue-600 transition py-2">About</a>
-              <a href="#contact" className="text-gray-700 hover:text-blue-600 transition py-2">Contact</a>
-            </div>
-          </div>
-        )}
+      <div className={`mobile-nav ${mobileOpen ? 'open' : ''}`}>
+        <a href="#home" onClick={() => setMobileOpen(false)}>Home</a>
+        <a href="#features" onClick={() => setMobileOpen(false)}>Features</a>
+        <a href="#how-it-works" onClick={() => setMobileOpen(false)}>How It Works</a>
+        <a href="#contact" onClick={() => setMobileOpen(false)}>Contact</a>
       </div>
-    </nav>
+    </>
   );
 }
-export default Navbar
