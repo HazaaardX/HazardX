@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react'
+import { AlertCircle, CheckCircle, ArrowLeft, ShieldAlert, Building2, Users, MapPin, Factory, Zap } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -119,72 +119,65 @@ export function PredictionPage() {
     setPrediction(null)
   }
 
-  const getSeverityColor = (severity) => {
-
-    if (
-      severity.toLowerCase().includes('high')
-    ) {
-      return 'text-red-700 bg-red-100'
-    }
-
-    return 'text-green-700 bg-green-100'
-  }
+  const isHighSeverity = prediction?.severity?.toLowerCase().includes('high')
 
   return (
-    <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="predict-page">
 
-      <div className="max-w-4xl mx-auto">
+      {/* Background decoration */}
+      <div className="predict-bg-wash" />
+
+      <div className="predict-container">
 
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition"
+          className="predict-back reveal"
         >
-          <ArrowLeft className="w-5 h-5" />
-
+          <ArrowLeft size={18} />
           Back to Home
         </button>
 
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="predict-card reveal reveal-d1">
 
-          {/*HEADER*/}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
-
-            <h1 className="text-3xl text-white">
-              Safety Incident Prediction
-            </h1>
-
-            <p className="text-blue-100 mt-2">
-              Enter workplace incident details
-              to predict severity risk
-            </p>
-
+          {/* Header */}
+          <div className="predict-card-header">
+            <div className="predict-header-icon">
+              <ShieldAlert size={22} />
+            </div>
+            <div>
+              <h1 className="predict-card-title">
+                Safety Incident Prediction
+              </h1>
+              <p className="predict-card-subtitle">
+                Enter workplace incident details to predict severity risk
+              </p>
+            </div>
           </div>
 
-          <div className="p-8">
+          <div className="predict-card-body">
 
             {!prediction ? (
 
               <form
                 onSubmit={handleSubmit}
-                className="space-y-8"
+                className="predict-form"
               >
 
-                {/*WORKPLACE INFO*/}
-                <div>
+                {/* Workplace Info */}
+                <div className="predict-form-group">
 
-                  <h3 className="text-lg text-gray-900 mb-5">
-                    Workplace Information
-                  </h3>
+                  <div className="predict-group-label">
+                    <span className="section-overline">Workplace Information</span>
+                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="predict-form-grid">
 
-                    {/*INDUSTRY*/}
-                    <div>
-
-                      <label className="block mb-2 text-gray-700 font-medium">
+                    {/* Industry */}
+                    <div className="predict-field">
+                      <label className="predict-label">
+                        <Building2 size={14} />
                         Industry Sector
                       </label>
-
                       <select
                         required
                         value={formData.industrySector}
@@ -194,12 +187,11 @@ export function PredictionPage() {
                             industrySector: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="predict-select"
                       >
                         <option value="">
                           Select Industry Sector
                         </option>
-
                         {industrySectors.map((sector) => (
                           <option
                             key={sector}
@@ -209,16 +201,14 @@ export function PredictionPage() {
                           </option>
                         ))}
                       </select>
-
                     </div>
 
-                    {/*EMPLOYEE TYPE*/}
-                    <div>
-
-                      <label className="block mb-2 text-gray-700 font-medium">
+                    {/* Employee Type */}
+                    <div className="predict-field">
+                      <label className="predict-label">
+                        <Users size={14} />
                         Employee Type
                       </label>
-
                       <select
                         required
                         value={formData.employeeType}
@@ -228,12 +218,11 @@ export function PredictionPage() {
                             employeeType: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="predict-select"
                       >
                         <option value="">
                           Select Employee Type
                         </option>
-
                         {employeeTypes.map((type) => (
                           <option
                             key={type}
@@ -243,16 +232,14 @@ export function PredictionPage() {
                           </option>
                         ))}
                       </select>
-
                     </div>
 
-                    {/*COUNTRY*/}
-                    <div>
-
-                      <label className="block mb-2 text-gray-700 font-medium">
+                    {/* Country */}
+                    <div className="predict-field">
+                      <label className="predict-label">
+                        <MapPin size={14} />
                         Country
                       </label>
-
                       <select
                         required
                         value={formData.country}
@@ -262,12 +249,11 @@ export function PredictionPage() {
                             country: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="predict-select"
                       >
                         <option value="">
                           Select Country
                         </option>
-
                         {countries.map((country) => (
                           <option
                             key={country}
@@ -277,16 +263,14 @@ export function PredictionPage() {
                           </option>
                         ))}
                       </select>
-
                     </div>
 
-                    {/*LOCAL PLANT*/}
-                    <div>
-
-                      <label className="block mb-2 text-gray-700 font-medium">
+                    {/* Local Plant */}
+                    <div className="predict-field">
+                      <label className="predict-label">
+                        <Factory size={14} />
                         Local / Plant
                       </label>
-
                       <select
                         required
                         value={formData.localPlant}
@@ -296,12 +280,11 @@ export function PredictionPage() {
                             localPlant: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="predict-select"
                       >
                         <option value="">
                           Select Local Plant
                         </option>
-
                         {localPlants.map((plant) => (
                           <option
                             key={plant}
@@ -311,25 +294,23 @@ export function PredictionPage() {
                           </option>
                         ))}
                       </select>
-
                     </div>
 
                   </div>
                 </div>
 
-                {/*INCIDENT INFO*/}
-                <div>
+                {/* Incident Info */}
+                <div className="predict-form-group">
 
-                  <h3 className="text-lg text-gray-900 mb-5">
-                    Incident Information
-                  </h3>
+                  <div className="predict-group-label">
+                    <span className="section-overline">Incident Information</span>
+                  </div>
 
-                  <div>
-
-                    <label className="block mb-2 text-gray-700 font-medium">
+                  <div className="predict-field">
+                    <label className="predict-label">
+                      <Zap size={14} />
                       Critical Risk
                     </label>
-
                     <select
                       required
                       value={formData.criticalRisk}
@@ -339,12 +320,11 @@ export function PredictionPage() {
                           criticalRisk: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="predict-select"
                     >
                       <option value="">
                         Select Critical Risk
                       </option>
-
                       {criticalRisks.map((risk) => (
                         <option
                           key={risk}
@@ -354,28 +334,32 @@ export function PredictionPage() {
                         </option>
                       ))}
                     </select>
-
                   </div>
 
                 </div>
 
-                {/*BUTTONS*/}
-                <div className="flex gap-4 pt-2">
+                {/* Buttons */}
+                <div className="predict-actions">
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
+                    className="btn-primary predict-submit"
                   >
-                    {isSubmitting
-                      ? 'Analyzing'
-                      : 'Predict Severity'}
+                    {isSubmitting ? (
+                      <>
+                        <span className="predict-spinner" />
+                        Analyzing…
+                      </>
+                    ) : (
+                      'Predict Severity'
+                    )}
                   </button>
 
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="px-8 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                    className="btn-secondary predict-reset"
                   >
                     Reset
                   </button>
@@ -386,144 +370,95 @@ export function PredictionPage() {
 
             ) : (
 
-              <div className="space-y-6">
+              <div className="predict-results reveal">
 
-                {/*RESULT*/}
-                <div className="text-center p-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
+                {/* Result */}
+                <div className="predict-result-hero">
 
-                  <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-lg mb-6">
-
-                    {prediction.severity
-                      .toLowerCase()
-                      .includes('high') ? (
-
-                      <AlertCircle className="w-10 h-10 text-red-600" />
-
+                  <div className={`predict-result-icon ${isHighSeverity ? 'predict-result-icon--danger' : 'predict-result-icon--safe'}`}>
+                    {isHighSeverity ? (
+                      <AlertCircle size={32} />
                     ) : (
-
-                      <CheckCircle className="w-10 h-10 text-green-600" />
-
+                      <CheckCircle size={32} />
                     )}
-
                   </div>
 
-                  <h3 className="text-2xl mb-4 text-gray-900">
+                  <h3 className="predict-result-title">
                     Prediction Result
                   </h3>
 
-                  <div
-                    className={`inline-block px-8 py-4 rounded-xl text-xl mt-4 font-semibold ${getSeverityColor(
-                      prediction.severity
-                    )}`}
-                  >
+                  <div className={`predict-severity-badge ${isHighSeverity ? 'predict-severity-badge--danger' : 'predict-severity-badge--safe'}`}>
                     {prediction.severity}
                   </div>
 
-                  <div className="mt-6 text-gray-700 text-lg">
-
-                    Confidence:{' '}
-
-                    <span className="font-bold">
+                  <div className="predict-confidence">
+                    <span className="predict-confidence-label">Confidence</span>
+                    <div className="predict-confidence-bar-wrap">
+                      <div
+                        className="predict-confidence-bar"
+                        style={{ width: `${prediction.confidence}%` }}
+                      />
+                    </div>
+                    <span className="predict-confidence-value">
                       {prediction.confidence}%
                     </span>
-
                   </div>
 
                 </div>
 
-                {/*RECOMMENDATION*/}
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
-
-                  <h4 className="font-semibold text-blue-900 mb-3 text-lg">
+                {/* Recommendation */}
+                <div className="predict-recommendation">
+                  <h4 className="predict-recommendation-title">
                     Safety Recommendation
                   </h4>
-
-                  <p className="text-blue-800 leading-relaxed">
+                  <p className="predict-recommendation-text">
                     {prediction.recommendation}
                   </p>
-
                 </div>
 
-                {/*INPUT SUMMARY*/}
-                <div className="bg-gray-50 border rounded-xl p-6">
-
-                  <h4 className="font-semibold text-gray-900 mb-4 text-lg">
+                {/* Input Summary */}
+                <div className="predict-summary">
+                  <h4 className="predict-summary-title">
                     Input Summary
                   </h4>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                    <div>
-                      <span className="text-gray-500">
-                        Industry:
-                      </span>
-
-                      <span className="ml-2 text-gray-900">
-                        {formData.industrySector}
-                      </span>
+                  <div className="predict-summary-grid">
+                    <div className="predict-summary-item">
+                      <span className="predict-summary-key">Industry</span>
+                      <span className="predict-summary-val">{formData.industrySector}</span>
                     </div>
-
-                    <div>
-                      <span className="text-gray-500">
-                        Employee Type:
-                      </span>
-
-                      <span className="ml-2 text-gray-900">
-                        {formData.employeeType}
-                      </span>
+                    <div className="predict-summary-item">
+                      <span className="predict-summary-key">Employee Type</span>
+                      <span className="predict-summary-val">{formData.employeeType}</span>
                     </div>
-
-                    <div>
-                      <span className="text-gray-500">
-                        Critical Risk:
-                      </span>
-
-                      <span className="ml-2 text-gray-900">
-                        {formData.criticalRisk}
-                      </span>
+                    <div className="predict-summary-item">
+                      <span className="predict-summary-key">Critical Risk</span>
+                      <span className="predict-summary-val">{formData.criticalRisk}</span>
                     </div>
-
-                    <div>
-                      <span className="text-gray-500">
-                        Country:
-                      </span>
-
-                      <span className="ml-2 text-gray-900">
-                        {formData.country}
-                      </span>
+                    <div className="predict-summary-item">
+                      <span className="predict-summary-key">Country</span>
+                      <span className="predict-summary-val">{formData.country}</span>
                     </div>
-
-                    <div>
-                      <span className="text-gray-500">
-                        Local Plant:
-                      </span>
-
-                      <span className="ml-2 text-gray-900">
-                        {formData.localPlant}
-                      </span>
+                    <div className="predict-summary-item">
+                      <span className="predict-summary-key">Local Plant</span>
+                      <span className="predict-summary-val">{formData.localPlant}</span>
                     </div>
-
                   </div>
-
                 </div>
 
-                {/*ACTION BUTTONS*/}
-                <div className="flex gap-4">
-
+                {/* Action Buttons */}
+                <div className="predict-actions">
                   <button
                     onClick={handleReset}
-                    className="flex-1 px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+                    className="btn-primary predict-submit"
                   >
                     New Prediction
                   </button>
-
                   <button
                     onClick={() => navigate('/')}
-                    className="px-8 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                    className="btn-secondary predict-reset"
                   >
                     Back to Home
                   </button>
-
                 </div>
 
               </div>
