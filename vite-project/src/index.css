@@ -871,3 +871,433 @@ img, svg {
     gap: 32px;
   }
 }
+
+/* ═══════════════════════════════════════════
+   PREDICTION PAGE
+   ═══════════════════════════════════════════ */
+.predict-page {
+  min-height: 100vh;
+  background: var(--bg-page);
+  padding: 120px var(--section-px) 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.predict-bg-wash {
+  position: absolute;
+  top: -300px;
+  right: -300px;
+  width: 1000px;
+  height: 1000px;
+  background: radial-gradient(ellipse, rgba(14, 116, 144, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.predict-container {
+  max-width: 780px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Back button ─── */
+.predict-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-bottom: 28px;
+  transition: color 0.2s var(--ease);
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.predict-back:hover {
+  color: var(--accent);
+}
+
+/* ─── Card ─── */
+.predict-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04),
+              0 8px 24px rgba(28, 25, 23, 0.03);
+}
+
+/* ─── Card header ─── */
+.predict-card-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 32px 36px 28px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-tint);
+}
+
+.predict-header-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg-page);
+  flex-shrink: 0;
+}
+
+.predict-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.predict-card-subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* ─── Card body ─── */
+.predict-card-body {
+  padding: 36px;
+}
+
+/* ─── Form layout ─── */
+.predict-form {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.predict-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.predict-group-label {
+  padding-bottom: 4px;
+}
+
+.predict-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ─── Field ─── */
+.predict-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.predict-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.005em;
+}
+
+.predict-label svg {
+  color: var(--text-tertiary);
+}
+
+.predict-select {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.2s var(--ease),
+              box-shadow 0.2s var(--ease);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A8A29E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.predict-select:hover {
+  border-color: var(--border-strong);
+}
+
+.predict-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.08);
+}
+
+/* Placeholder option */
+.predict-select option[value=""] {
+  color: var(--text-tertiary);
+}
+
+/* ─── Form actions ─── */
+.predict-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.predict-submit {
+  flex: 1;
+}
+
+.predict-reset {
+  min-width: 100px;
+}
+
+/* ─── Spinner ─── */
+@keyframes predictSpin {
+  to { transform: rotate(360deg); }
+}
+
+.predict-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(250, 250, 248, 0.3);
+  border-top-color: var(--bg-page);
+  border-radius: 50%;
+  animation: predictSpin 0.6s linear infinite;
+}
+
+/* ═══════════════════════════════════════════
+   PREDICTION RESULTS
+   ═══════════════════════════════════════════ */
+.predict-results {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ─── Result hero ─── */
+.predict-result-hero {
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--bg-tint);
+  border: 1px solid var(--border-faint);
+  border-radius: 10px;
+}
+
+.predict-result-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.predict-result-icon--danger {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+
+.predict-result-icon--safe {
+  background: #F0FDF4;
+  color: #16A34A;
+  border: 1px solid #BBF7D0;
+}
+
+.predict-result-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+/* ─── Severity badge ─── */
+.predict-severity-badge {
+  display: inline-block;
+  padding: 10px 28px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.predict-severity-badge--danger {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.predict-severity-badge--safe {
+  background: #F0FDF4;
+  color: #166534;
+  border: 1px solid #BBF7D0;
+}
+
+/* ─── Confidence ─── */
+.predict-confidence {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.predict-confidence-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.predict-confidence-bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.predict-confidence-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 100px;
+  transition: width 0.8s var(--ease);
+}
+
+.predict-confidence-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  min-width: 48px;
+  text-align: right;
+}
+
+/* ─── Recommendation ─── */
+.predict-recommendation {
+  padding: 24px;
+  background: var(--bg-accent-soft);
+  border: 1px solid var(--accent-soft);
+  border-radius: 10px;
+}
+
+.predict-recommendation-title {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-text);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.predict-recommendation-text {
+  font-size: 14px;
+  color: var(--accent-text);
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+/* ─── Input summary ─── */
+.predict-summary {
+  padding: 24px;
+  background: var(--bg-tint);
+  border: 1px solid var(--border-faint);
+  border-radius: 10px;
+}
+
+.predict-summary-title {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.predict-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.predict-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.predict-summary-key {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.predict-summary-val {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .predict-page {
+    padding-top: 100px;
+    padding-bottom: 48px;
+  }
+
+  .predict-card-header {
+    padding: 24px 20px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .predict-card-body {
+    padding: 24px 20px;
+  }
+
+  .predict-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .predict-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .predict-actions {
+    flex-direction: column;
+  }
+
+  .predict-confidence {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
