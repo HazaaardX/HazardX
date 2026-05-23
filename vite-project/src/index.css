@@ -1301,3 +1301,16 @@ img, svg {
     gap: 8px;
   }
 }
+
+.predict-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff1f1;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+}
