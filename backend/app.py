@@ -1,80 +1,3 @@
-# from fastapi import FastAPI
-# from fastapi.middleware.cors import CORSMiddleware
-
-# import pandas as pd
-# import pickle
-
-# app = FastAPI()
-
-# #frontend requests
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-# #load model and encoder
-# model = pickle.load(open("random_forest_model.pkl", "rb"))
-# encoders = pickle.load(open("encoders.pkl", "rb"))
-
-# @app.get("/")
-# def home():
-#     return {"message": "HazardX Backend Running"}
-
-# @app.post("/predict")
-# def predict(data: dict):
-
-#     try:
-
-#         input_data = {
-#             "Countries": data["country"],
-#             "Local": data["local"],
-#             "Industry Sector": data["industrySector"],
-#             "Employee or Third Party": data["employeeType"],
-#             "Critical Risk": data["criticalRisk"],
-#         }
-
-#         df = pd.DataFrame([input_data])
-
-#         for col in df.columns:
-#             df[col] = encoders[col].transform(df[col])
-
-#         prediction = model.predict(df)[0]
-
-#         probabilities = model.predict_proba(df)[0]
-
-#         confidence = round(max(probabilities) * 100, 2)
-
-#         if prediction == 1:
-#             severity = "High Severity Risk"
-
-#             recommendation = (
-#                 "Immediate safety inspection recommended. "
-#                 "Review operational hazards and enforce "
-#                 "preventive safety protocols."
-#             )
-
-#         else:
-#             severity = "Low Severity Risk"
-
-#             recommendation = (
-#                 "Current incident pattern indicates lower "
-#                 "severity risk. Continue standard safety monitoring."
-#             )
-
-#         return {
-#             "severity": severity,
-#             "confidence": confidence,
-#             "recommendation": recommendation,
-#         }
-
-#     except Exception as e:
-#         return {
-#             "error": str(e)
-#         }
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, validator
@@ -85,13 +8,15 @@ import pickle
 import logging
 import os
 
+# ── Logging ───────────────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)s  %(message)s",
 )
 logger = logging.getLogger(__name__)
 
-model = None
+# ── Globals ───────────────────────────────────────────────────────────────────
+model    = None
 encoders = None
 
 REQUIRED_FILES = ["random_forest_model.pkl", "encoders.pkl"]
@@ -104,6 +29,7 @@ FEATURE_COLUMNS = [
     "Critical Risk",
 ]
 
+# ── Lifespan ──────────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global model, encoders
@@ -115,7 +41,7 @@ async def lifespan(app: FastAPI):
                 "Ensure model artifacts are in the working directory."
             )
 
-    model   = pickle.load(open("random_forest_model.pkl", "rb"))
+    model    = pickle.load(open("random_forest_model.pkl", "rb"))
     encoders = pickle.load(open("encoders.pkl", "rb"))
     logger.info("Model and encoders loaded successfully.")
 
@@ -123,10 +49,11 @@ async def lifespan(app: FastAPI):
     if missing:
         raise KeyError(f"Encoders missing for columns: {missing}")
 
-    yield 
+    yield
 
     logger.info("Shutting down HazardX backend.")
 
+# ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(
     title="HazardX API",
     description="Workplace hazard severity prediction API.",
@@ -136,12 +63,13 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# ── Schemas ───────────────────────────────────────────────────────────────────
 class PredictRequest(BaseModel):
     country:        str
     local:          str
@@ -149,7 +77,6 @@ class PredictRequest(BaseModel):
     employeeType:   str
     criticalRisk:   str
 
-    
     @validator("*", pre=True)
     def strip_strings(cls, v):
         return v.strip() if isinstance(v, str) else v
@@ -160,25 +87,25 @@ class PredictResponse(BaseModel):
     recommendation: str
     probabilities:  dict
 
-#helper
+# ── Helper ────────────────────────────────────────────────────────────────────
 def encode_input(data: PredictRequest) -> pd.DataFrame:
     """Map request fields → model columns and label-encode each one."""
     raw = {
-        "Countries":              data.country,
-        "Local":                  data.local,
-        "Industry Sector":        data.industrySector,
+        "Countries":               data.country,
+        "Local":                   data.local,
+        "Industry Sector":         data.industrySector,
         "Employee or Third Party": data.employeeType,
-        "Critical Risk":          data.criticalRisk,
+        "Critical Risk":           data.criticalRisk,
     }
 
     df = pd.DataFrame([raw])
 
+    # Check for unknown values before encoding
     unknown_values = {}
     for col in FEATURE_COLUMNS:
         encoder = encoders[col]
         known   = set(encoder.classes_)
         val     = df.at[0, col]
-
         if val not in known:
             unknown_values[col] = val
 
@@ -196,7 +123,7 @@ def encode_input(data: PredictRequest) -> pd.DataFrame:
 
     return df
 
-#routes
+# ── Routes ────────────────────────────────────────────────────────────────────
 @app.get("/", tags=["Health"])
 def home():
     return {"message": "HazardX Backend Running", "status": "ok"}
@@ -204,21 +131,18 @@ def home():
 
 @app.get("/health", tags=["Health"])
 def health():
-    """Quick liveness + readiness check."""
+    """Liveness + readiness check."""
     ready = model is not None and encoders is not None
     return {
-        "status":  "ready" if ready else "unavailable",
-        "model":   "loaded" if model    is not None else "missing",
+        "status":   "ready" if ready else "unavailable",
+        "model":    "loaded" if model    is not None else "missing",
         "encoders": "loaded" if encoders is not None else "missing",
     }
 
 
 @app.get("/options", tags=["Metadata"])
 def get_options():
-    """
-    Return the valid choices for every categorical field.
-    The frontend can use this to populate dropdowns dynamically.
-    """
+    """Return valid choices for every categorical field (for frontend dropdowns)."""
     if encoders is None:
         raise HTTPException(status_code=503, detail="Encoders not loaded yet.")
 
@@ -233,26 +157,34 @@ def get_options():
 
 @app.post("/predict", response_model=PredictResponse, tags=["Prediction"])
 def predict(data: PredictRequest):
-    """
-    Predict workplace hazard severity for the given input.
-    Returns severity label, confidence %, recommendation, and full probabilities.
-    """
+    """Predict workplace hazard severity for the given input."""
     logger.info("Predict request received: %s", data.model_dump())
 
+    # Encode input — raises 422 HTTPException on unknown values
     df = encode_input(data)
 
-    prediction    = model.predict(df)[0]
-    probabilities = model.predict_proba(df)[0]
-    classes       = model.classes_  
+    # ── Run model ─────────────────────────────────────────────────────────────
+    try:
+        prediction    = model.predict(df)[0]
+        probabilities = model.predict_proba(df)[0]
+    except Exception as e:
+        logger.error("Model prediction failed: %s", str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=f"Model prediction error: {str(e)}"
+        )
 
+    # ── Fix: cast classes_ to plain Python ints to avoid numpy int mismatch ──
+    classes    = [int(c) for c in model.classes_]
     confidence = round(float(max(probabilities)) * 100, 2)
 
     prob_map = {
-        "High Severity Risk": round(float(probabilities[list(classes).index(1)]) * 100, 2),
-        "Low Severity Risk":  round(float(probabilities[list(classes).index(0)]) * 100, 2),
+        "High Severity Risk": round(float(probabilities[classes.index(1)]) * 100, 2),
+        "Low Severity Risk":  round(float(probabilities[classes.index(0)]) * 100, 2),
     }
 
-    if prediction == 1:
+    # ── Build response ────────────────────────────────────────────────────────
+    if int(prediction) == 1:
         severity = "High Severity Risk"
         recommendation = (
             "Immediate safety inspection recommended. "
