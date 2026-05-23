@@ -1,6 +1,5 @@
 # dependencies
 node_modules/
-
 # production build
 dist/
 
@@ -19,3 +18,8 @@ yarn-error.log*
 # editor files
 .vscode/
 .idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
