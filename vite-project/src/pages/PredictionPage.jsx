@@ -81,7 +81,13 @@ export function PredictionPage() {
             'Content-Type': 'application/json',
           },
 
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            country: formData.country,
+            local: formData.localPlant,
+            industrySector: formData.industrySector,
+            employeeType: formData.employeeType,
+            criticalRisk: formData.criticalRisk,
+          }),
         }
       )
 
@@ -92,14 +98,6 @@ export function PredictionPage() {
     } catch (error) {
 
       console.error(error)
-
-      //hardcoded value until backend is completed
-      setPrediction({
-        severity: 'High Severity Risk',
-        confidence: 67,
-        recommendation:
-          'Immediate safety inspection recommended for this operational scenario.',
-      })
 
     } finally {
 
